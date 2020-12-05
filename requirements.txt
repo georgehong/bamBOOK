@@ -1,2 +1,4 @@
 google-cloud-texttospeech
 pygame
+kivy
+gtts
