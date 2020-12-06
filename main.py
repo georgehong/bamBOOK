@@ -28,8 +28,23 @@ Window.clearcolor = (.86, .90, .93, 1)
  
 TRIES = 6
 ALPHABET = [chr(x) for x in range(97, 97 + 26)]
-LEVELS = ["l", "i", "m", "h", "i","hello world pleased to meet you", "h u", "Elephants are the largest land animals they eat only plants Even though elephants are very strong, they are the only mammals that cannot jump"]
+#LEVELS = ["l", "i", "m", "h", "i","hello world pleased to meet you", "h u", "Elephants are the largest land animals they eat only plants Even though elephants are very strong, they are the only mammals that cannot jump"]
 
+# Load first level from text file
+file1 = open('levelN.txt', 'r') 
+Lines = file1.readlines() 
+final_lines = []
+punc = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
+# Removing punctuations in string 
+# Using loop + punctuation string 
+for line in Lines:
+    current = line
+    for ele in current:  
+        if ele in punc:  
+            current = current.replace(ele, "")  
+    final_lines.append(current)
+LEVELS = [line.strip() for line in final_lines]
+file1.close()
 
 class Bambook(App):
     def play_audio(value, *args):
@@ -41,28 +56,34 @@ class Bambook(App):
 
     def next_level(self, arg):
 
-        # Increment level counter
-        self.level += 1
         # Joy's button
-        if self.level == 3:
+        if self.level == len(LEVELS):
+            self.pb.value = self.level * 10
             self.popup2.open()
+            return
 
         self.cursor_index = 0
         # Update text
         self.excerpt = LEVELS[self.level]
+
+        self.raw_excerpt = Lines[self.level]
+
         excerpt_ = self.excerpt.split(" ")
         blanks_ = ['-' * len(x) for x in excerpt_]
 
         self.final_blanks = " ".join(blanks_)
         self.final_blank_check = " ".join(blanks_)
 
-        self.center_label.text = self.excerpt
+        self.center_label.text = self.raw_excerpt
         self.progress_text.text = self.final_blanks
 
         self.pb.value = self.level * 10
 
         filepath = 'assets/lv' + str(self.level) + '.png'
         self.im2.source = filepath
+
+        # Increment level counter
+        self.level += 1
 
         # Auto playback
         tts = gTTS(self.excerpt)
@@ -94,7 +115,10 @@ class Bambook(App):
         self.cursor_index = 0
         # Controls which text excerpt to use
         self.level = 0
-        self.excerpt = LEVELS[self.level]#"luv u" #Elephants are the largest land animals they eat only plants Even though elephants are very strong, they are the only mammals that cannot jump"
+        self.excerpt = LEVELS[self.level]  
+
+        self.raw_excerpt = Lines[self.level]
+
         excerpt_ = self.excerpt.split(" ")
         blanks_ = ['-' * len(x) for x in excerpt_]
         self.final_blanks = " ".join(blanks_)
@@ -102,7 +126,6 @@ class Bambook(App):
 
         tts = gTTS(self.excerpt)
         tts.save('output.mp3')
-        #sound = SoundLoader.load('output.wav')
 
         self.title = 'Bambook'
         mainbox = BoxLayout(orientation='vertical', padding=[24])
@@ -120,7 +143,7 @@ class Bambook(App):
         #mainbox.add_widget(im)
         # TODO Add corner stats/info?
         #self.center_label = Label(text=self.excerpt, text_size=(800, 300), color=[0, 0, 0, 1], valign='center')
-        self.center_label = Label(text=self.excerpt, text_size=(800, 1100), font_size=40, color=[0, 0, 0, 1], valign='center', halign='center') #,pos=(450,1100))
+        self.center_label = Label(text=self.raw_excerpt, text_size=(800, 1100), font_size=40, color=[0, 0, 0, 1], valign='center', halign='center') #,pos=(450,1100))
         im = Image(source='assets/logo1.png', size=(100,100))#,pos=(10,500))
         b = Button(text="", background_normal='assets/normal6.png', background_down='assets/normal6.png', on_press=self.play_audio, size=(50,75))#,pos=(800,1100), size=(50, 50))
         toppanel.add_widget(im)
@@ -141,7 +164,7 @@ class Bambook(App):
         filepath = 'assets/lv' + str(self.level) + '.png'
         self.im2 = Image(source=filepath)
         bottom_panel.add_widget(self.im2)
-        self.pb = ProgressBar(value=10 * self.level, max=100)
+        self.pb = ProgressBar(value=10 * self.level, max=10 * len(LEVELS))
         bottom_panel.add_widget(self.pb)
         mainbox.add_widget(middle_panel)
         #bottom_panel.add_widget(middle_panel)
@@ -258,8 +281,11 @@ class Bambook(App):
 #                dex = self.cursor_index
         # easier access to critical variables
         else:
+            replace_letter = self.letter
             # Update displayed text, button text, move cursor
-            self.final_blanks = curr[:dex] + self.letter + curr[dex + 1:]
+            if self.letter == self.excerpt[dex].lower():
+                replace_letter = self.excerpt[dex]
+            self.final_blanks = curr[:dex] + replace_letter + curr[dex + 1:]
             self.progress_text.text = self.final_blanks
             # To check at every character, look at same index of the above string and self.excerpt and check for a match
         # make a check to change letter to red
@@ -267,6 +293,7 @@ class Bambook(App):
             self.cursor_index += 1
         
         if self.cursor_index == len(self.excerpt):
+            self.progress_text.text = self.raw_excerpt
             self.popup.open()
  
         # if self.progress_text == self.excerpt:
