@@ -9,6 +9,7 @@ from kivy.uix.popup import Popup
 from kivy.config import Config
 from kivy.uix.image import Image
 from kivy.uix.anchorlayout import AnchorLayout
+from kivy.uix.floatlayout import FloatLayout
 from playsound import playsound
 from kivy.core.audio import SoundLoader
 from kivy.uix.progressbar import ProgressBar
@@ -80,8 +81,9 @@ class Bambook(App):
         self.title = 'Bambook'
         mainbox = BoxLayout(orientation='vertical', padding=[6])
         middle_panel = BoxLayout(orientation='vertical', size_hint=(1, .6))
-        toppanel = BoxLayout(orientation='horizontal', size_hint=(1, .2))
-        bottom_panel = BoxLayout(orientation='horizontal', size_hint=(1, .2))
+        #toppanel = FloatLayout(orientation='horizontal', size_hint=(1, .4))
+        toppanel = FloatLayout(size=(650, 200))
+        bottom_panel = BoxLayout(orientation='horizontal', size_hint=(1, .3))
 
         #logobox = BoxLayout(orientation='horizontal',)
         #middle_panel.add_widget(im)
@@ -93,7 +95,7 @@ class Bambook(App):
         #self.center_label = Label(text=self.excerpt, text_size=(800, 300), color=[0, 0, 0, 1], valign='center')
         self.center_label = Label(text=self.excerpt, text_size=(800, 300), color=[0, 0, 0, 1], valign='center', halign='center')
         im = Image(source='assets/logo.png')
-        b = Button(text="Replay", on_press=self.play_audio)
+        b = Button(text="", background_normal='assets/down.png', background_down='assets/up.png', on_press=self.play_audio,pos_hint={'x':.2, 'y':.2}, size_hint=(0.6, 0.6))
         toppanel.add_widget(im)
         toppanel.add_widget(self.center_label)
         toppanel.add_widget(b)
@@ -109,9 +111,9 @@ class Bambook(App):
         bottom_panel.add_widget(im2)
         pb = ProgressBar(value=10 * self.level, max=100)
         bottom_panel.add_widget(pb)
-        #mainbox.add_widget(middle_panel)
-        bottom_panel.add_widget(middle_panel)
-        mainbox.add_widget(bottom_panel)
+        mainbox.add_widget(middle_panel)
+        #bottom_panel.add_widget(middle_panel)
+        #mainbox.add_widget(bottom_panel)
 
  
         alphabet = GridLayout(cols=7, spacing=[2], size_hint=(1, .4))
@@ -153,7 +155,7 @@ class Bambook(App):
 #        alphabet.add_widget(self.delete_button)
  
         mainbox.add_widget(alphabet)
-
+        mainbox.add_widget(bottom_panel)
         # Restart Splash Screen
         self.contentpopup = BoxLayout(orientation='vertical',
                                       padding=[6])
