@@ -18,11 +18,11 @@ from gtts import gTTS
 # size window
 Config.set('graphics', 'resizable', 0)
 Config.set('graphics', 'width', 900)
-Config.set('graphics', 'height', 650)
+Config.set('graphics', 'height', 1000)
 from kivy.core.window import Window
 
 # background color
-Window.clearcolor = (.86, .90, .93, 1)
+Window.clearcolor = (.76, .83, .31, 1)
 #import random
 #from words_for_hangman import RANDOM_WORDS
 #from words_for_hangman import ALPHABET_RU
@@ -30,7 +30,7 @@ Window.clearcolor = (.86, .90, .93, 1)
  
 TRIES = 6
 ALPHABET = [chr(x) for x in range(97, 97 + 26)]
-LEVELS = ["l", "i", "hello world pleased to meet you", "h u", "Elephants are the largest land animals they eat only plants Even though elephants are very strong, they are the only mammals that cannot jump"]
+LEVELS = ["Elephants are the largest land animals they eat only plants","l", "i", "hello world pleased to meet you", "h u", "Elephants are the largest land animals they eat only plants Even though elephants are very strong, they are the only mammals that cannot jump"]
 
 class Bambook(App):
     def play_audio(value, *args):
@@ -79,11 +79,12 @@ class Bambook(App):
         #sound = SoundLoader.load('output.wav')
 
         self.title = 'Bambook'
-        mainbox = BoxLayout(orientation='vertical', padding=[6])
-        middle_panel = BoxLayout(orientation='vertical', size_hint=(1, .6))
-        #toppanel = FloatLayout(orientation='horizontal', size_hint=(1, .4))
-        toppanel = FloatLayout(size=(650, 200))
-        bottom_panel = BoxLayout(orientation='horizontal', size_hint=(1, .3))
+        mainbox = BoxLayout(orientation='vertical', padding=[24])
+        middle_panel = BoxLayout(orientation='vertical', size_hint=(1, .5))
+        toppanel = BoxLayout(orientation='horizontal', size_hint=(1, .2))
+        toppanel2 = BoxLayout(orientation='horizontal', size_hint=(1, .1))
+        #toppanel = FloatLayout(size = (900, 1200))
+        bottom_panel = BoxLayout(orientation='horizontal', size_hint=(1, .2))
 
         #logobox = BoxLayout(orientation='horizontal',)
         #middle_panel.add_widget(im)
@@ -93,19 +94,22 @@ class Bambook(App):
         #mainbox.add_widget(im)
         # TODO Add corner stats/info?
         #self.center_label = Label(text=self.excerpt, text_size=(800, 300), color=[0, 0, 0, 1], valign='center')
-        self.center_label = Label(text=self.excerpt, text_size=(800, 300), color=[0, 0, 0, 1], valign='center', halign='center')
-        im = Image(source='assets/logo.png')
-        b = Button(text="", background_normal='assets/down.png', background_down='assets/up.png', on_press=self.play_audio,pos_hint={'x':.2, 'y':.2}, size_hint=(0.6, 0.6))
+        self.center_label = Label(text=self.excerpt, text_size=(800, 1100), font_size=40, color=[0, 0, 0, 1], valign='center', halign='center') #,pos=(450,1100))
+        im = Image(source='assets/logo1.png', size=(100,100))#,pos=(10,500))
+        b = Button(text="", background_normal='assets/normal.png', background_down='assets/down1.png', on_press=self.play_audio, size=(50,75))#,pos=(800,1100), size=(50, 50))
         toppanel.add_widget(im)
-        toppanel.add_widget(self.center_label)
+        toppanel.add_widget(Widget())
         toppanel.add_widget(b)
+        toppanel2.add_widget(self.center_label)
+       
  
         # Typing Progress
         self.progress_text = Label(text=self.final_blanks,
                                   font_size=40, size_hint=(1, .7),
                                   halign='center', valign='center',
                                   text_size=(800, 300), color=[0, 0, 0, 1])
-        middle_panel.add_widget(toppanel)
+        mainbox.add_widget(toppanel)
+        middle_panel.add_widget(toppanel2)
         middle_panel.add_widget(self.progress_text)
         im2 = Image(source='assets/lv1.png')
         bottom_panel.add_widget(im2)
@@ -116,7 +120,7 @@ class Bambook(App):
         #mainbox.add_widget(bottom_panel)
 
  
-        alphabet = GridLayout(cols=7, spacing=[2], size_hint=(1, .4))
+        alphabet = GridLayout(cols=6, spacing=[5], size_hint=(1, .4))
         self.alphabet_button = ALPHABET
  
         for letter in range(0, len(self.alphabet_button) - 5):
@@ -124,7 +128,7 @@ class Bambook(App):
                 text=self.alphabet_button[letter],
                 font_size=26,
                 on_press=self.user_letter,
-                background_color=[.64, .74, .76, 1],
+                background_color=[.46, .61, .56, 1],
                 background_normal='')
             alphabet.add_widget(self.alphabet_button[letter])
  
@@ -135,7 +139,7 @@ class Bambook(App):
                 text=self.alphabet_button[letter],
                 font_size=26,
                 on_press=self.user_letter,
-                background_color=[.64, .74, .76, 1],
+                background_color=[.46, .61, .56, 1],
                 background_normal='')
             alphabet.add_widget(self.alphabet_button[letter])
        
@@ -143,7 +147,7 @@ class Bambook(App):
                 text="space",
                 font_size=26,
                 on_press=self.user_letter,
-                background_color=[.64, .74, .76, 1],
+                background_color=[.46, .61, .56, 1],
                 background_normal='')
 #        self.delete_button = Button(
 #                text="delete",
@@ -162,11 +166,11 @@ class Bambook(App):
         self.contentpopuptext = Label(text='You Earned a New Seed!', size_hint=(1, .8))
         contentpopupbutton = GridLayout(cols=2, spacing=[2], size_hint=(1, .2))
         self.contentpopupbutton1 = Button(text="Exit",
-                                          background_color=[.64, .74, .76, 1],
+                                          background_color=[.46, .61, .56, 1],
                                           background_normal='',
                                           on_press=self.exit_level)
         self.contentpopupbutton2 = Button(text="Next Level",
-                                          background_color=[.64, .74, .76, 1],
+                                          background_color=[.46, .61, .56, 1],
                                           background_normal='',
                                           on_press=self.next_level)
         contentpopupbutton.add_widget(self.contentpopupbutton1)
@@ -177,8 +181,8 @@ class Bambook(App):
         self.popup = Popup(title='Good Job!',
                            content=self.contentpopup,
                            size_hint=(None, None), size=(400, 300),
-                           auto_dismiss=False, background_color=(.86, .90, .93, .7),
-                           separator_color=(.86, .90, .93, .7))
+                           auto_dismiss=False, background_color=(.43, .51, .83, .7),
+                           separator_color=(.43, .51, .83, .7))
         #sound.play()
         Clock.schedule_once(self.play_audio, 1)
         return mainbox
