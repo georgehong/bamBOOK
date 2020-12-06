@@ -83,7 +83,7 @@ class Bambook(App):
         
         self.contentpopup0 = BoxLayout(orientation='vertical',
                                       padding=[6])
-        contentpopupbutton0 = GridLayout(cols=1, spacing=[2], size_hint=(1, 1))
+        contentpopupbutton0 = GridLayout(cols=1, spacing=[0], size_hint=(1, 1))
         self.contentpopupbutton0 = Button(text="", background_normal='assets/screen.png', background_down='assets/normal5.png', on_press=self.next_level ,size_hint=(1, 1))
         
         self.contentpopup0.add_widget(contentpopupbutton0)
@@ -91,7 +91,7 @@ class Bambook(App):
         
         self.popup0 = Popup(title=' ',
                            content=self.contentpopup0,
-                           size_hint=(None, None), size=(900, 900),
+                           size_hint=(0.6, 0.9),
                            auto_dismiss=False, background_color=(.43, .51, .83, .7),
                            separator_color=(.43, .51, .83, .7))
         
