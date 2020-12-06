@@ -8,11 +8,9 @@ from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.config import Config
 from kivy.uix.image import Image
-from kivy.uix.anchorlayout import AnchorLayout
-from kivy.uix.floatlayout import FloatLayout
 from playsound import playsound
-from kivy.core.audio import SoundLoader
 from kivy.uix.progressbar import ProgressBar
+
 from gtts import gTTS
 
 # size window
@@ -31,6 +29,7 @@ Window.clearcolor = (.86, .90, .93, 1)
 TRIES = 6
 ALPHABET = [chr(x) for x in range(97, 97 + 26)]
 LEVELS = ["l", "i", "m", "h", "i","hello world pleased to meet you", "h u", "Elephants are the largest land animals they eat only plants Even though elephants are very strong, they are the only mammals that cannot jump"]
+
 
 class Bambook(App):
     def play_audio(value, *args):
@@ -71,8 +70,25 @@ class Bambook(App):
         Clock.schedule_once(self.play_audio, 1)
 
         self.popup.dismiss()
+        self.popup0.dismiss()
 
     def build(self):
+        
+        self.contentpopup0 = BoxLayout(orientation='vertical',
+                                      padding=[6])
+        contentpopupbutton0 = GridLayout(cols=1, spacing=[2], size_hint=(1, 1))
+        self.contentpopupbutton0 = Button(text="", background_normal='assets/screen.png', background_down='assets/normal5.png', on_press=self.next_level ,size_hint=(1, 1))
+        
+        self.contentpopup0.add_widget(contentpopupbutton0)
+        contentpopupbutton0.add_widget(self.contentpopupbutton0)
+        
+        self.popup0 = Popup(title=' ',
+                           content=self.contentpopup0,
+                           size_hint=(None, None), size=(900, 900),
+                           auto_dismiss=False, background_color=(.43, .51, .83, .7),
+                           separator_color=(.43, .51, .83, .7))
+        
+        
         # Window title
         # Words to display
         self.cursor_index = 0
@@ -220,7 +236,7 @@ class Bambook(App):
                            auto_dismiss=False, background_color=(.43, .51, .83, .7),
                            separator_color=(.43, .51, .83, .7))
 
-        Clock.schedule_once(self.play_audio, 1)
+        Clock.schedule_once(self.popup0.open, 0.1)
         return mainbox
    
  
