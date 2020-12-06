@@ -22,7 +22,7 @@ Config.set('graphics', 'height', 1000)
 from kivy.core.window import Window
 
 # background color
-Window.clearcolor = (.76, .83, .31, 1)
+Window.clearcolor = (.86, .90, .93, 1)
 #import random
 #from words_for_hangman import RANDOM_WORDS
 #from words_for_hangman import ALPHABET_RU
@@ -30,7 +30,7 @@ Window.clearcolor = (.76, .83, .31, 1)
  
 TRIES = 6
 ALPHABET = [chr(x) for x in range(97, 97 + 26)]
-LEVELS = ["Elephants are the largest land animals they eat only plants","l", "i", "hello world pleased to meet you", "h u", "Elephants are the largest land animals they eat only plants Even though elephants are very strong, they are the only mammals that cannot jump"]
+LEVELS = ["l", "i", "m", "h", "i","hello world pleased to meet you", "h u", "Elephants are the largest land animals they eat only plants Even though elephants are very strong, they are the only mammals that cannot jump"]
 
 class Bambook(App):
     def play_audio(value, *args):
@@ -44,6 +44,10 @@ class Bambook(App):
 
         # Increment level counter
         self.level += 1
+        # Joy's button
+        if self.level == 3:
+            self.popup2.open()
+
         self.cursor_index = 0
         # Update text
         self.excerpt = LEVELS[self.level]
@@ -56,10 +60,16 @@ class Bambook(App):
         self.center_label.text = self.excerpt
         self.progress_text.text = self.final_blanks
 
+        self.pb.value = self.level * 10
+
+        filepath = 'assets/lv' + str(self.level) + '.png'
+        self.im2.source = filepath
+
         # Auto playback
         tts = gTTS(self.excerpt)
         tts.save('output.mp3')
         Clock.schedule_once(self.play_audio, 1)
+
         self.popup.dismiss()
 
     def build(self):
@@ -80,11 +90,11 @@ class Bambook(App):
 
         self.title = 'Bambook'
         mainbox = BoxLayout(orientation='vertical', padding=[24])
-        middle_panel = BoxLayout(orientation='vertical', size_hint=(1, .5))
+        middle_panel = BoxLayout(orientation='vertical', size_hint=(1, .4))
         toppanel = BoxLayout(orientation='horizontal', size_hint=(1, .2))
         toppanel2 = BoxLayout(orientation='horizontal', size_hint=(1, .1))
         #toppanel = FloatLayout(size = (900, 1200))
-        bottom_panel = BoxLayout(orientation='horizontal', size_hint=(1, .2))
+        bottom_panel = BoxLayout(orientation='horizontal', size_hint=(1, .3))
 
         #logobox = BoxLayout(orientation='horizontal',)
         #middle_panel.add_widget(im)
@@ -96,7 +106,7 @@ class Bambook(App):
         #self.center_label = Label(text=self.excerpt, text_size=(800, 300), color=[0, 0, 0, 1], valign='center')
         self.center_label = Label(text=self.excerpt, text_size=(800, 1100), font_size=40, color=[0, 0, 0, 1], valign='center', halign='center') #,pos=(450,1100))
         im = Image(source='assets/logo1.png', size=(100,100))#,pos=(10,500))
-        b = Button(text="", background_normal='assets/normal.png', background_down='assets/down1.png', on_press=self.play_audio, size=(50,75))#,pos=(800,1100), size=(50, 50))
+        b = Button(text="", background_normal='assets/normal6.png', background_down='assets/normal6.png', on_press=self.play_audio, size=(50,75))#,pos=(800,1100), size=(50, 50))
         toppanel.add_widget(im)
         toppanel.add_widget(Widget())
         toppanel.add_widget(b)
@@ -111,16 +121,18 @@ class Bambook(App):
         mainbox.add_widget(toppanel)
         middle_panel.add_widget(toppanel2)
         middle_panel.add_widget(self.progress_text)
-        im2 = Image(source='assets/lv1.png')
-        bottom_panel.add_widget(im2)
-        pb = ProgressBar(value=10 * self.level, max=100)
-        bottom_panel.add_widget(pb)
+
+        filepath = 'assets/lv' + str(self.level) + '.png'
+        self.im2 = Image(source=filepath)
+        bottom_panel.add_widget(self.im2)
+        self.pb = ProgressBar(value=10 * self.level, max=100)
+        bottom_panel.add_widget(self.pb)
         mainbox.add_widget(middle_panel)
         #bottom_panel.add_widget(middle_panel)
         #mainbox.add_widget(bottom_panel)
 
  
-        alphabet = GridLayout(cols=6, spacing=[5], size_hint=(1, .4))
+        alphabet = GridLayout(cols=7, spacing=[5], size_hint=(1, .4))
         self.alphabet_button = ALPHABET
  
         for letter in range(0, len(self.alphabet_button) - 5):
@@ -132,7 +144,7 @@ class Bambook(App):
                 background_normal='')
             alphabet.add_widget(self.alphabet_button[letter])
  
-        #alphabet.add_widget(Widget())
+        alphabet.add_widget(Widget())
  
         for letter in range(len(self.alphabet_button) - 5, len(self.alphabet_button)):
             self.alphabet_button[letter] = Button(
@@ -163,7 +175,7 @@ class Bambook(App):
         # Restart Splash Screen
         self.contentpopup = BoxLayout(orientation='vertical',
                                       padding=[6])
-        self.contentpopuptext = Label(text='You Earned a New Seed!', size_hint=(1, .8))
+        self.contentpopuptext = Label(text='Level Passed!', size_hint=(1, .8))
         contentpopupbutton = GridLayout(cols=2, spacing=[2], size_hint=(1, .2))
         self.contentpopupbutton1 = Button(text="Exit",
                                           background_color=[.46, .61, .56, 1],
@@ -184,6 +196,30 @@ class Bambook(App):
                            auto_dismiss=False, background_color=(.43, .51, .83, .7),
                            separator_color=(.43, .51, .83, .7))
         #sound.play()
+        # Joy's Button =================>
+        self.contentpopup2 = BoxLayout(orientation='vertical',
+                                      padding=[6])
+        self.contentpopuptext2 = Label(text='Practice Complete', size_hint=(1, .8))
+        contentpopupbutton2 = GridLayout(cols=2, spacing=[2], size_hint=(1, .2))
+        self.contentpopupbutton3 = Button(text="Done",
+                                          background_color=[.46, .61, .56, 1],
+                                          background_normal='',
+                                          on_press=self.exit_level)
+        self.contentpopupbutton4 = Button(text="Next",
+                                          background_color=[.46, .61, .56, 1],
+                                          background_normal='',
+                                          on_press=self.exit_level)
+        contentpopupbutton2.add_widget(self.contentpopupbutton3)
+        contentpopupbutton2.add_widget(self.contentpopupbutton4)
+        self.contentpopup2.add_widget(self.contentpopuptext2)
+        self.contentpopup2.add_widget(contentpopupbutton2)
+        
+        self.popup2 = Popup(title='Good Job!',
+                           content=self.contentpopup2,
+                           size_hint=(None, None), size=(400, 300),
+                           auto_dismiss=False, background_color=(.43, .51, .83, .7),
+                           separator_color=(.43, .51, .83, .7))
+
         Clock.schedule_once(self.play_audio, 1)
         return mainbox
    
