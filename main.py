@@ -10,25 +10,17 @@ from kivy.config import Config
 from kivy.uix.image import Image
 from playsound import playsound
 from kivy.uix.progressbar import ProgressBar
-
+from kivy.core.window import Window
 from gtts import gTTS
 
 # size window
 Config.set('graphics', 'resizable', 0)
 Config.set('graphics', 'width', 900)
-Config.set('graphics', 'height', 1000)
-from kivy.core.window import Window
-
-# background color
+Config.set('graphics', 'height', 1200)
 Window.clearcolor = (.86, .90, .93, 1)
-#import random
-#from words_for_hangman import RANDOM_WORDS
-#from words_for_hangman import ALPHABET_RU
-#import re
  
 TRIES = 6
 ALPHABET = [chr(x) for x in range(97, 97 + 26)]
-#LEVELS = ["l", "i", "m", "h", "i","hello world pleased to meet you", "h u", "Elephants are the largest land animals they eat only plants Even though elephants are very strong, they are the only mammals that cannot jump"]
 
 # Load first level from text file
 file1 = open('levelN.txt', 'r') 
@@ -51,12 +43,10 @@ class Bambook(App):
         playsound('output.mp3')
 
     def exit_level(self, *args):
-        # obvious
         App.get_running_app().stop()
 
     def next_level(self, arg):
-
-        # Joy's button
+        # Final completion button
         if self.level == len(LEVELS):
             self.pb.value = self.level * 10
             self.popup2.open()
@@ -65,7 +55,6 @@ class Bambook(App):
         self.cursor_index = 0
         # Update text
         self.excerpt = LEVELS[self.level]
-
         self.raw_excerpt = Lines[self.level]
 
         excerpt_ = self.excerpt.split(" ")
@@ -73,15 +62,12 @@ class Bambook(App):
 
         self.final_blanks = " ".join(blanks_)
         self.final_blank_check = " ".join(blanks_)
-
         self.center_label.text = self.raw_excerpt
         self.progress_text.text = self.final_blanks
-
         self.pb.value = self.level * 10
 
         filepath = 'assets/lv' + str(self.level) + '.png'
         self.im2.source = filepath
-
         # Increment level counter
         self.level += 1
 
@@ -110,13 +96,11 @@ class Bambook(App):
                            separator_color=(.43, .51, .83, .7))
         
         
-        # Window title
-        # Words to display
+        # Window title, Words to display
         self.cursor_index = 0
         # Controls which text excerpt to use
         self.level = 0
         self.excerpt = LEVELS[self.level]  
-
         self.raw_excerpt = Lines[self.level]
 
         excerpt_ = self.excerpt.split(" ")
@@ -132,25 +116,15 @@ class Bambook(App):
         middle_panel = BoxLayout(orientation='vertical', size_hint=(1, .4))
         toppanel = BoxLayout(orientation='horizontal', size_hint=(1, .2))
         toppanel2 = BoxLayout(orientation='horizontal', size_hint=(1, .1))
-        #toppanel = FloatLayout(size = (900, 1200))
         bottom_panel = BoxLayout(orientation='horizontal', size_hint=(1, .3))
 
-        #logobox = BoxLayout(orientation='horizontal',)
-        #middle_panel.add_widget(im)
-        #logobox.add_widget(im)
-        #logobox.add_widget(Widget())
-
-        #mainbox.add_widget(im)
-        # TODO Add corner stats/info?
-        #self.center_label = Label(text=self.excerpt, text_size=(800, 300), color=[0, 0, 0, 1], valign='center')
-        self.center_label = Label(text=self.raw_excerpt, text_size=(800, 1100), font_size=40, color=[0, 0, 0, 1], valign='center', halign='center') #,pos=(450,1100))
-        im = Image(source='assets/logo1.png', size=(100,100))#,pos=(10,500))
-        b = Button(text="", background_normal='assets/normal6.png', background_down='assets/normal6.png', on_press=self.play_audio, size=(50,75))#,pos=(800,1100), size=(50, 50))
+        self.center_label = Label(text=self.raw_excerpt, text_size=(800, 1100), font_size=40, color=[0, 0, 0, 1], valign='center', halign='center') 
+        im = Image(source='assets/logo1.png', size=(100,100))
+        b = Button(text="", background_normal='assets/normal6.png', background_down='assets/normal6.png', on_press=self.play_audio, size=(50,75))
         toppanel.add_widget(im)
         toppanel.add_widget(Widget())
         toppanel.add_widget(b)
         toppanel2.add_widget(self.center_label)
-       
  
         # Typing Progress
         self.progress_text = Label(text=self.final_blanks,
@@ -167,9 +141,6 @@ class Bambook(App):
         self.pb = ProgressBar(value=10 * self.level, max=10 * len(LEVELS))
         bottom_panel.add_widget(self.pb)
         mainbox.add_widget(middle_panel)
-        #bottom_panel.add_widget(middle_panel)
-        #mainbox.add_widget(bottom_panel)
-
  
         alphabet = GridLayout(cols=7, spacing=[5], size_hint=(1, .4))
         self.alphabet_button = ALPHABET
@@ -200,14 +171,7 @@ class Bambook(App):
                 on_press=self.user_letter,
                 background_color=[.46, .61, .56, 1],
                 background_normal='')
-#        self.delete_button = Button(
-#                text="delete",
-#                font_size=26,
-#                on_press=self.user_letter,
-#                background_color=[.64, .74, .76, 1],
-#                background_normal='')
         alphabet.add_widget(self.space_button)
-#        alphabet.add_widget(self.delete_button)
  
         mainbox.add_widget(alphabet)
         mainbox.add_widget(bottom_panel)
@@ -234,8 +198,7 @@ class Bambook(App):
                            size_hint=(None, None), size=(400, 300),
                            auto_dismiss=False, background_color=(.43, .51, .83, .7),
                            separator_color=(.43, .51, .83, .7))
-        #sound.play()
-        # Joy's Button =================>
+        # Construct completion popup
         self.contentpopup2 = BoxLayout(orientation='vertical',
                                       padding=[6])
         self.contentpopuptext2 = Label(text='Practice Complete', size_hint=(1, .8))
@@ -274,11 +237,6 @@ class Bambook(App):
             self.final_blanks = curr[:dex] + self.letter + curr[dex + 1:]
             self.progress_text.text = self.final_blanks
                
-#        if self.letter == "delete":
-#            if dex != 0:
-#                self.final_blanks = curr[:dex -1] + self.final_blank_check[dex:]
-#                self.cursor_index -= 1
-#                dex = self.cursor_index
         # easier access to critical variables
         else:
             replace_letter = self.letter
@@ -288,7 +246,6 @@ class Bambook(App):
             self.final_blanks = curr[:dex] + replace_letter + curr[dex + 1:]
             self.progress_text.text = self.final_blanks
             # To check at every character, look at same index of the above string and self.excerpt and check for a match
-        # make a check to change letter to red
         if self.letter == self.excerpt[dex].lower():
             self.cursor_index += 1
         
@@ -296,11 +253,6 @@ class Bambook(App):
             self.progress_text.text = self.raw_excerpt
             self.popup.open()
  
-        # if self.progress_text == self.excerpt:
-        #     print("GOOD JOB")
-        # else:
-        #     print("cHeCk YoUr WoRk")
-        #print("HI")
    
  
 if __name__ == '__main__':
