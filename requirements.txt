@@ -2,3 +2,5 @@ google-cloud-texttospeech
 pygame
 kivy
 gtts
+pyobjc
+playsound
