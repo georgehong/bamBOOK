@@ -11,6 +11,7 @@ from kivy.uix.image import Image
 from kivy.uix.anchorlayout import AnchorLayout
 from playsound import playsound
 from kivy.core.audio import SoundLoader
+from kivy.uix.progressbar import ProgressBar
 from gtts import gTTS
 
 # size window
@@ -104,7 +105,13 @@ class Bambook(App):
                                   text_size=(800, 300), color=[0, 0, 0, 1])
         middle_panel.add_widget(toppanel)
         middle_panel.add_widget(self.progress_text)
-        mainbox.add_widget(middle_panel)
+        im2 = Image(source='assets/lv1.png')
+        bottom_panel.add_widget(im2)
+        pb = ProgressBar(value=10 * self.level, max=100)
+        bottom_panel.add_widget(pb)
+        #mainbox.add_widget(middle_panel)
+        bottom_panel.add_widget(middle_panel)
+        mainbox.add_widget(bottom_panel)
 
  
         alphabet = GridLayout(cols=7, spacing=[2], size_hint=(1, .4))
